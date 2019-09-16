@@ -19,5 +19,4 @@ class FooRemoteSource {
         } to (key + 1)
     }
 
-    class NetworkError : Throwable()
 }

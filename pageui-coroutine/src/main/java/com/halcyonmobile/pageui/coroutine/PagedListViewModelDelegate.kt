@@ -47,6 +47,6 @@ class PagedListViewModelDelegate<Key, Value, Error> : PagedListViewModel<Value, 
 
     companion object {
         private const val DEFAULT_PAGE_SIZE = 10
-        private const val DEFAULT_INITIAL_LOAD_SIZE = 15
+        private const val DEFAULT_INITIAL_LOAD_SIZE = 20
     }
 }

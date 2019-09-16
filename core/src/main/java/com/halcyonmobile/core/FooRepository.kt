@@ -17,7 +17,7 @@ class FooRepository(private val fooRemoteSource: FooRemoteSource) {
 
     private val invalidator = DataSourceInvalidator<Int, Int>()
 
-    fun get(coroutineScope: CoroutineScope): PagedResult<Int, Int, FooRemoteSource.NetworkError> {
+    fun get(coroutineScope: CoroutineScope): PagedResult<Int, Int, NetworkError> {
         return createPagedResultFromRequest(
             coroutineScope = coroutineScope,
             request = { key: Int, pageSize : Int -> fooRemoteSource.get(key, pageSize) },

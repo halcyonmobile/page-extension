@@ -1,6 +1,5 @@
 package com.halcyonmobile.pagination_extension
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
@@ -13,16 +12,15 @@ import com.halcyonmobile.pageui.observeList
 import com.halcyonmobile.pageui.observerLoadingAndUpdateSwipeRefreshLayout
 import com.halcyonmobile.pagination_extension.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class BarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-        binding.navigate.setOnClickListener{
-            startActivity(Intent(this,BarActivity::class.java))
-        }
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        val adapter = MainAdapter()
+        val viewModel = ViewModelProviders.of(this).get(BarViewModel::class.java)
+        viewModel.context = this
+        viewModel.a()
+        val adapter = BarAdapter()
         viewModel.observeList(this, adapter)
         viewModel.observerLoadingAndUpdateSwipeRefreshLayout(this, binding.swipeRefreshLayout)
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.onForceRefresh() }
