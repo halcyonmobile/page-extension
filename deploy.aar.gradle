@@ -5,18 +5,24 @@
 // # 4 artifactory: ./gradlew artifactoryPublish
 
 // #2: increment the libraryVersion in the project build.gradle
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
+apply plugin: 'digital.wup.android-maven-publish'
 
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "sources"
+}
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        mavenAar(MavenPublication) {
+            from components.android
 
-            groupId 'com.halcyonmobile.oauth-setup'
+            groupId 'com.halcyonmobile.page-extension'
             version libraryVersion
             artifactId libraryArtifactId
 
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            artifact sourceJar
         }
     }
 }
@@ -33,10 +39,11 @@ artifactory {
         }
 
         defaults {
-            publications('mavenJava')
+            publications('mavenAar')
             publishArtifacts = true
 
             properties = ['qa.level': 'basic', 'q.os': 'android', 'dev.team': 'core']
+//            publishPom = true
         }
     }
 }

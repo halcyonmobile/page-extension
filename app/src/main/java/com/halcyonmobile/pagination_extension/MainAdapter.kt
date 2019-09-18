@@ -2,9 +2,7 @@ package com.halcyonmobile.pagination_extension
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.halcyonmobile.pageui.BindingViewHolder
 import com.halcyonmobile.pageui.LoadingMorePagedListAdapter
-import com.halcyonmobile.pageui.LoadingMoreViewHolder
 import com.halcyonmobile.pagination_extension.databinding.ItemMainViewBinding
 
 /**
@@ -25,9 +23,9 @@ class MainAdapter: LoadingMorePagedListAdapter<Int, MainAdapter.MainViewHolder>(
     }
 
 
-    class MainViewHolder(parent: ViewGroup) : BindingViewHolder<ItemMainViewBinding>(parent, R.layout.item_main_view){
+    class MainViewHolder(parent: ViewGroup) : BindingViewHolder<ItemMainViewBinding, Int>(parent, R.layout.item_main_view){
 
-        fun bind(data: Int){
+        override fun bindData(data: Int){
             binding.data.text = "$data"
         }
     }

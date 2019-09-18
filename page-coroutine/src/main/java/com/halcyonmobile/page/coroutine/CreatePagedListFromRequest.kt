@@ -26,21 +26,15 @@ inline fun <Key, Value, reified Error : Throwable> createPagedResultFromRequest(
     crossinline cache: (Key, Int) -> Pair<List<Value>, Key>?
 ): PagedResult<Key, Value, Error> {
     val channelBasedDataSourceUpdateListener = ChannelBasedDataSourceUpdateListener<Error>()
-    val dataSourceFactory = StateProvidingListDataSourceFactory(
+    val dataSourceFactory = StateProvidingListDataSourceFactory<Key, Value, Error>(
         initialPageKey = initialPageKey,
-        provideCacheByKey = ProvideCacheByKey(cache),
-        provideDataByPageKeyAndSize = SuspendProvideDataByPagedKeyAndSize(coroutineScope, request),
+        provideCacheByKey = ProvideCacheByKey { key, size -> cache(key, size) },
+        provideDataByPageKeyAndSize = SuspendProvideDataByPagedKeyAndSize(coroutineScope) { key, size -> request(key, size) },
         dataSourceUpdateListener = channelBasedDataSourceUpdateListener
     )
     return PagedResult(
         boundaryCallback = null,
-        dataSourceFactory = dataSourceInvalidator?.let {
-            DataSourceAggregatingDataSourceFactory(
-                dataSourceFactory,
-                it
-            )
-        }
-            ?: dataSourceFactory,
+        dataSourceFactory = dataSourceInvalidator?.let { DataSourceAggregatingDataSourceFactory(dataSourceFactory, it) } ?: dataSourceFactory,
         stateChannel = channelBasedDataSourceUpdateListener.stateChannel
     )
 }
@@ -81,7 +75,7 @@ inline fun <Key, Value, reified Error : Throwable> createPagedResultFromRequest(
     coroutineScope = coroutineScope,
     initialPageKey = initialPageKey,
     dataSourceInvalidator = invalidator,
-    request = request,
+    request = {key, size -> request(key, size) },
     cache = { _, _ -> null }
 )
 
@@ -93,6 +87,6 @@ inline fun <Key, Value, reified Error : Throwable> createPagedResultFromRequest(
     coroutineScope = coroutineScope,
     initialPageKey = initialPageKey,
     dataSourceInvalidator = null,
-    request = request,
+    request = {key, size -> request(key, size) },
     cache = { _, _ -> null }
 )

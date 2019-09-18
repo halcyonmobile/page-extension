@@ -6,21 +6,22 @@
 
 package com.halcyonmobile.pageui
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.halcyonmobile.pageui.databinding.ItemLoadingMoreFailedBinding
-import com.halcyonmobile.pageui.R
+import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Default ViewHolder for [LoadingMorePagedListAdapter] to handle loading more errors.
  *
  * It has a clickable image which retries with the given action.
  */
-class LoadingMoreFailedViewHolder(parent: ViewGroup) : BindingViewHolder<ItemLoadingMoreFailedBinding>(parent, layoutRes) {
+class LoadingMoreFailedViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)){
 
     private var retry: (() -> Unit)? = null
 
     init {
-        binding.refreshIcon.setOnClickListener {
+        itemView.findViewById<ImageView>(R.id.refresh_icon).setOnClickListener {
             retry?.invoke()
         }
     }

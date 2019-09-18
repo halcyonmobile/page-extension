@@ -1,9 +1,8 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 28
@@ -25,20 +24,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding{
-        enabled = true
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 project.ext.set("libraryArtifactId", "pageui")
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api "androidx.lifecycle:lifecycle-livedata:2.0.0"
-    api("androidx.paging:paging-runtime:$pagingVersion") {
-        exclude group: 'androidx.paging', module: 'paging-common'
-    }
-    api project(":page")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
+    api "androidx.lifecycle:lifecycle-livedata:2.1.0"
+    api "androidx.appcompat:appcompat:1.1.0"
+    api "androidx.paging:paging-runtime:$pagingVersion"
+    implementation project(":page")
 }
 repositories {
     mavenCentral()
