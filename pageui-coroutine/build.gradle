@@ -33,7 +33,6 @@ android {
         jvmTarget = "1.8"
     }
 }
-project.ext.set("libraryArtifactId", "pageui-coroutine")
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -47,4 +46,5 @@ repositories {
     mavenCentral()
 }
 
-apply from: "../deploy.aar.gradle"
+project.ext.set("libraryArtifactId", "pageui-coroutine")
+apply plugin: 'com.halcyonmobile.plugin.publish.artifactory.aar-library'

@@ -7,7 +7,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
-project.ext.set("libraryArtifactId", "page")
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 buildscript {
@@ -35,4 +34,5 @@ dependencies {
     api "androidx.paging:paging-common:$pagingVersion"
 }
 
-apply from: "../deploy.gradle"
+project.ext.set("libraryArtifactId", "page")
+apply plugin: 'com.halcyonmobile.plugin.publish.artifactory.jar-library'

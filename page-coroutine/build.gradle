@@ -8,7 +8,6 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
 }
 
-project.ext.set("libraryArtifactId", "page-coroutine")
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 buildscript {
@@ -37,4 +36,5 @@ dependencies {
     api project(":page")
 }
 
-apply from: "../deploy.gradle"
+project.ext.set("libraryArtifactId", "page-coroutine")
+apply plugin: 'com.halcyonmobile.plugin.publish.artifactory.jar-library'
