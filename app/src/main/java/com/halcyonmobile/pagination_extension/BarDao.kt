@@ -22,11 +22,7 @@ abstract class BarDao : SuspendPagedDao<Int, Bar, BarEntity> {
     @Query("SELECT * from barEntity ORDER BY id")
     abstract override fun getValueEntitiesFactory(): DataSource.Factory<Int, BarEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     abstract override suspend fun insert(valueEntities: List<BarEntity>)
-
-    override fun valueEntityToValue(valueEntity: BarEntity): Bar = Bar(id = valueEntity.id, title = valueEntity.something)
-
-    override fun valueToValueEntry(value: Bar): BarEntity = BarEntity(id = value.id, something = value.title)
 
 }

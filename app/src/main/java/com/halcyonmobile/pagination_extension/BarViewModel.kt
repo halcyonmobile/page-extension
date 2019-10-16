@@ -26,13 +26,20 @@ class BarViewModel(private val delegate: PagedListViewModelDelegate<Int, Bar, Ne
     constructor() : this(PagedListViewModelDelegate<Int, Bar, NetworkError>())
 
     lateinit var context: Context
-    private val repository by lazy { BarRepository(Room.databaseBuilder(context, BarDataBase::class.java, "BarDataBase").build().barDao, BarRemoteSource()) }
+    private val repository by lazy {
+        val db = Room.databaseBuilder(context, BarDataBase::class.java, "BarDataBase").build()
+        BarRepository(
+            BarRemoteSource(),
+            BarLocalSource(db.barDao),
+            BarPageKeyLocalSource(db.keyDao)
+        )
+    }
 
 
     fun a() {
         viewModelScope.launch {
             delegate.setupPagedListByRequest(20, 40) {
-                repository.get(viewModelScope)
+                repository.get(viewModelScope, 20)
             }
         }
     }

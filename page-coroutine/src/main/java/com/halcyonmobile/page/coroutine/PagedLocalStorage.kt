@@ -1,7 +1,8 @@
 package com.halcyonmobile.page.coroutine
 
 import androidx.paging.DataSource
-import com.halcyonmobile.page.db.ValueLocalStorage
+import com.halcyonmobile.page.db.ValueFactoryProvider
+import com.halcyonmobile.page.db.ValueLocalCacher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -13,17 +14,32 @@ import kotlinx.coroutines.launch
  * Notes:
  * @author (OPTIONAL! Use only if the code is complex, otherwise delete this line.)
  */
-class PagedLocalStorage<Key, Value, ValueEntity>(
+
+interface SuspendValueLocalStorage<Key, Value> : ValueFactoryProvider<Key, Value> {
+
+    suspend fun cache(values: List<Value>)
+}
+
+abstract class PagedSuspendLocalStorage<Key,Value,ValueEntity>(protected val pagedDao : SuspendPagedDao<Key, Value, ValueEntity>) : SuspendValueLocalStorage<Key,Value> {
+
+    override fun getValueFactory(): DataSource.Factory<Key, Value> = pagedDao.getValueEntitiesFactory().map(::valueEntityToValue)
+
+    override suspend fun cache(values: List<Value>) = pagedDao.insert(values.map(::valueToValueEntry))
+
+    abstract fun valueToValueEntry(value: Value): ValueEntity
+
+    abstract fun valueEntityToValue(valueEntity: ValueEntity): Value
+}
+
+class SuspendValueLocalCacherAdapter<Key, Value>(
     private val coroutineScope: CoroutineScope,
-    private val pagedDao: SuspendPagedDao<Key, Value, ValueEntity>
-) : ValueLocalStorage<Value> {
+    private val suspendValueLocalStorage: SuspendValueLocalStorage<Key, Value>
+) : ValueLocalCacher<Key, Value> {
 
-    fun getValueFactory(): DataSource.Factory<Key, Value> =
-        pagedDao.getValueEntitiesFactory().map(pagedDao::valueEntityToValue)
-
-    override fun invoke(values: List<Value>, callback: () -> Unit) {
+    override fun cache(values: List<Value>, callback: () -> Unit) {
         coroutineScope.launch {
-            pagedDao.insert(values.map(pagedDao::valueToValueEntry))
+            suspendValueLocalStorage.cache(values)
+            callback()
         }
     }
 }

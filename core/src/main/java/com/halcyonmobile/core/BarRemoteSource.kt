@@ -5,7 +5,7 @@ import kotlinx.coroutines.delay
 class BarRemoteSource {
 
     suspend fun get(key: Int, pageSize: Int): Pair<List<Bar>, Int> {
-        delay(100)
+        delay(2000)
         return (0 until pageSize).map {
             val index = key * pageSize + it
             Bar(index, "index: $index")

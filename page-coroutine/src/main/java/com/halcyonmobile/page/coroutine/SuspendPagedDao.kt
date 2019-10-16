@@ -11,12 +11,8 @@ import androidx.paging.DataSource
  * @author (OPTIONAL! Use only if the code is complex, otherwise delete this line.)
  */
 interface SuspendPagedDao<Key, Value, ValueEntity> {
-    //@Query("SELECT * from barEntity ORDER BY id")
+
     fun getValueEntitiesFactory(): DataSource.Factory<Key, ValueEntity>
 
-    suspend fun insert(valueEntities: List<ValueEntity>)
-
-    fun valueToValueEntry(value: Value): ValueEntity
-
-    fun valueEntityToValue(valueEntity: ValueEntity): Value
+    suspend fun insert(valueEntities: List<@JvmSuppressWildcards ValueEntity>)
 }

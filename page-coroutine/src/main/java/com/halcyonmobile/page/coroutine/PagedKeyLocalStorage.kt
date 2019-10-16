@@ -13,21 +13,53 @@ import kotlinx.coroutines.launch
  * Notes:
  * @author (OPTIONAL! Use only if the code is complex, otherwise delete this line.)
  */
-class PagedKeyLocalStorage<Key, Value, KeyEntity>(
+
+interface SuspendKeyLocalStorage<Key, Value> {
+    suspend fun cache(key: KeyOrEndOfList<Key>)
+
+    suspend fun getKey(value: Value): KeyOrEndOfList<Key>
+}
+
+class SuspendKeyLocalStorageAdapter<Key, Value>(
     private val coroutineScope: CoroutineScope,
-    private val keyDao: SuspendKeyDao<Key, KeyEntity>
+    private val suspendKeyLocalStorage: SuspendKeyLocalStorage<Key, Value>
 ) : KeyLocalStorage<Key, Value> {
+
     override fun cache(key: KeyOrEndOfList<Key>, callback: () -> Unit) {
         coroutineScope.launch {
-            keyDao.insert(keyDao.keyToKeyEntity(key))
+            suspendKeyLocalStorage.cache(key)
             callback()
         }
     }
 
     override fun getKey(value: Value, callback: (KeyOrEndOfList<Key>) -> Unit) {
         coroutineScope.launch {
-            callback(keyDao.keyEntityToKey(keyDao.get()))
+            callback(suspendKeyLocalStorage.getKey(value))
         }
     }
 
+}
+
+abstract class PagedSuspendKeyLocalStorage<Key, Value, KeyEntityId, KeyEntity>(
+    private val keyEntityId: KeyEntityId,
+    private val keyDao: SuspendKeyDao<KeyEntityId, KeyEntity>
+) : SuspendKeyLocalStorage<Key, Value> {
+
+    override suspend fun cache(key: KeyOrEndOfList<Key>) {
+        val entity = if (key is KeyOrEndOfList.Key<Key>){
+            keyToKeyEntity(key.key)
+        } else {
+            endToKeyEntity()
+        }
+        keyDao.insert(entity)
+    }
+
+    override suspend fun getKey(value: Value): KeyOrEndOfList<Key> =
+        keyEntityToKey(keyDao.get(keyEntityId))
+
+    abstract fun endToKeyEntity() : KeyEntity
+
+    abstract fun keyToKeyEntity(key: Key): KeyEntity
+
+    abstract fun keyEntityToKey(keyEntity: KeyEntity): KeyOrEndOfList<Key>
 }

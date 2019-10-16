@@ -17,7 +17,7 @@ class StateProvidingBoundaryCallBack<Key, Value, Error>(
     private val dataSourceUpdateListener: DataSourceUpdateListener<Error>,
     private val provideDataByPageKeyAndSize: ProvideDataByPageKeyAndSize<Value, Key, Error>,
     private val keyLocalStorage: KeyLocalStorage<Key, Value>,
-    private val valueLocalStorage: ValueLocalStorage<Value>,
+    private val valueLocalCacher: ValueLocalCacher<Key, Value>,
     private val initialKey: Key,
     private val networkPageSize: Int
 ) : PagedList.BoundaryCallback<Value>() {
@@ -44,7 +44,7 @@ class StateProvidingBoundaryCallBack<Key, Value, Error>(
                 is ProvideDataByPageKeyAndSize.Result.Success -> {
                     val nextKey = if (it.data.isEmpty()) KeyOrEndOfList.EndReached<Key>() else KeyOrEndOfList.Key(it.nextKey)
                     keyLocalStorage.cache(nextKey) {
-                        valueLocalStorage(it.data) {
+                        valueLocalCacher.cache(it.data) {
                             dataSourceUpdateListener(if (handleEmptyState && it.data.isEmpty()) DataSourceState.Empty() else DataSourceState.Normal())
                         }
                     }

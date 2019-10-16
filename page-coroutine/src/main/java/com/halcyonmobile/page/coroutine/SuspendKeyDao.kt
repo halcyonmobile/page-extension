@@ -10,12 +10,8 @@ import com.halcyonmobile.page.db.KeyOrEndOfList
  * Notes:
  * @author (OPTIONAL! Use only if the code is complex, otherwise delete this line.)
  */
-interface SuspendKeyDao<Key, KeyEntity> {
-    suspend fun get(): KeyEntity
+interface SuspendKeyDao<KeyEntityId, KeyEntity> {
+    suspend fun get(id: KeyEntityId): KeyEntity
 
     suspend fun insert(keyEntity: KeyEntity)
-
-    fun keyToKeyEntity(key: KeyOrEndOfList<Key>): KeyEntity
-
-    fun keyEntityToKey(keyEntity: KeyEntity): KeyOrEndOfList<Key>
 }

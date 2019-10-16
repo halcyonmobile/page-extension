@@ -1,5 +1,7 @@
 package com.halcyonmobile.page.db
 
+import androidx.paging.DataSource
+
 /**
  * Purpose
  * <p>
@@ -8,6 +10,7 @@ package com.halcyonmobile.page.db
  * Notes:
  * @author (OPTIONAL! Use only if the code is complex, otherwise delete this line.)
  */
-interface ValueLocalStorage<Value>{
-    operator fun invoke(values: List<Value>, callback: () -> Unit)
+interface ValueLocalCacher<Key, Value>{
+
+    fun cache(values: List<Value>, callback: () -> Unit)
 }
