@@ -1,12 +1,9 @@
 package com.halcyonmobile.page.db
 
 /**
- * Purpose
- * <p>
- * Description
- * <p/>
- * Notes:
- * @author (OPTIONAL! Use only if the code is complex, otherwise delete this line.)
+ * Represents the Key of the page.
+ *
+ * It can be either that no more data is available on the network [EndReached] or a value [Key]
  */
 sealed class KeyOrEndOfList<Key> {
     class EndReached<Key> : KeyOrEndOfList<Key>()

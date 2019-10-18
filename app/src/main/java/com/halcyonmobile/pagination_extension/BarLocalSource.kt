@@ -1,8 +1,7 @@
 package com.halcyonmobile.pagination_extension
 
-import androidx.paging.DataSource
 import com.halcyonmobile.core.Bar
-import com.halcyonmobile.page.coroutine.PagedSuspendLocalStorage
+import com.halcyonmobile.page.coroutine.db.localstorage.PagedSuspendLocalStorage
 
 class BarLocalSource(barDao: BarDao) : PagedSuspendLocalStorage<Int, Bar, BarEntity>(barDao){
 

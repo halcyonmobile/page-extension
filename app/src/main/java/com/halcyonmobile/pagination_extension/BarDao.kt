@@ -3,10 +3,9 @@ package com.halcyonmobile.pagination_extension
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.halcyonmobile.core.Bar
-import com.halcyonmobile.page.coroutine.SuspendPagedDao
+import com.halcyonmobile.page.coroutine.db.dao.SuspendPagedDao
 
 /**
  * Purpose

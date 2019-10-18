@@ -6,12 +6,12 @@ import com.halcyonmobile.page.DataSourceUpdateListener
 import com.halcyonmobile.page.ProvideDataByPageKeyAndSize
 
 /**
- * Purpose
- * <p>
- * Description
- * <p/>
- * Notes:
- * @author (OPTIONAL! Use only if the code is complex, otherwise delete this line.)
+ * A [PagedList.BoundaryCallback] which provides state in via [dataSourceUpdateListener]
+ * [provideDataByPageKeyAndSize] a request which gets data from the network from a key
+ * [keyLocalStorage] local storage of the page key, save and get is used.
+ * [valueLocalCacher] a local storage which is able to cache the returned values, it should save into the database.
+ * [initialKey] the initial key used if no items are in the database
+ * [networkPageSize] how much elements should be requested from the network
  */
 class StateProvidingBoundaryCallBack<Key, Value, Error>(
     private val dataSourceUpdateListener: DataSourceUpdateListener<Error>,

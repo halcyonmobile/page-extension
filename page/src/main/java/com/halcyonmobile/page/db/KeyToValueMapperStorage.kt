@@ -1,21 +1,17 @@
 package com.halcyonmobile.page.db
 
 /**
- * Purpose
- * <p>
- * Description
- * <p/>
- * Notes:
- * @author (OPTIONAL! Use only if the code is complex, otherwise delete this line.)
+ * An abstract implementation of [KeyLocalStorage] which assumes the page [Key] can be extracted from the last data value.
  */
 abstract class KeyToValueMapperStorage<Key, Value> : KeyLocalStorage<Key, Value> {
     private var didReachEnd = false
 
-    override fun cache(key: KeyOrEndOfList<Key>, callback: () -> Unit) {
+    final override fun cache(key: KeyOrEndOfList<Key>, callback: () -> Unit) {
         didReachEnd = key is KeyOrEndOfList.EndReached
+        callback()
     }
 
-    override fun getKey(value: Value, callback: (KeyOrEndOfList<Key>) -> Unit) {
+    final override fun getKey(value: Value, callback: (KeyOrEndOfList<Key>) -> Unit) {
         if (didReachEnd) {
             callback(KeyOrEndOfList.EndReached())
         } else {
@@ -23,6 +19,9 @@ abstract class KeyToValueMapperStorage<Key, Value> : KeyLocalStorage<Key, Value>
         }
     }
 
+    /**
+     * Extracts the [Key] from the [value]
+     */
     abstract fun mapValueToKey(value: Value): Key
 }
 
