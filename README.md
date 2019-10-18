@@ -17,6 +17,8 @@ For the UI a RecyclerView.Adapter is introduced which handles the loading at the
 Also some helper methods are introduced to ease the observation of the delegate.
 Currently only coroutines are supported, but RxJava or callback based implementation can be introduced too if they are requested.
 
+Current latest version 0.1.0.2
+
 ### Add artifactory to your dependencies
 
 - in your top-level build.gradle add the following setup to access halcyon libraries :
@@ -71,7 +73,7 @@ class FooRepository(private val fooRemoteSource: FooRemoteSource) {
 
 // the signiture of the fooRemoteSource.get():
 @Throws(NetworkError::class)
-suspend fun get(key: String, pageSize: Int): Pair<List<Foo>, Int>
+suspend fun get(key: String, pageSize: Int): Pair<List<Foo>, String>
 
 //NetworkError is your specific exception which you throw when the network request failed.
 ```

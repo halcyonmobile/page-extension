@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-package com.halcyonmobile.pageui
+package com.halcyonmobile.pagination_extension
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * [ViewHolder][RecyclerView.ViewHolder] which holds a [binding]
  */
-open class BindingViewHolder<T : ViewDataBinding> private constructor(protected val binding: T) :
+open class BindingViewHolder<T : ViewDataBinding, Data> private constructor(protected val binding: T) :
     RecyclerView.ViewHolder(binding.root) {
 
     constructor(parent: ViewGroup, @LayoutRes layoutRes: Int) : this(
@@ -27,4 +27,12 @@ open class BindingViewHolder<T : ViewDataBinding> private constructor(protected 
             false
         )
     )
+
+    final fun bind(data: Data){
+        bindData(data)
+        binding.executePendingBindings()
+    }
+
+    protected open fun bindData(data: Data){
+    }
 }

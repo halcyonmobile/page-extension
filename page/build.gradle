@@ -1,18 +1,15 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'maven-publish'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
-project.ext.set("libraryArtifactId", "page")
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 buildscript {
-    ext.kotlin_version = '1.3.50'
     repositories {
         mavenCentral()
     }
@@ -37,4 +34,5 @@ dependencies {
     api "androidx.paging:paging-common:$pagingVersion"
 }
 
-apply from: "../deploy.gradle"
+project.ext.set("libraryArtifactId", "page")
+apply plugin: 'com.halcyonmobile.plugin.publish.artifactory.jar-library'

@@ -8,6 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.halcyonmobile.pageui.observeInitialLoadingAndShowIndicator
 import com.halcyonmobile.pageui.observeList
 import com.halcyonmobile.pageui.observerLoadingAndUpdateSwipeRefreshLayout
