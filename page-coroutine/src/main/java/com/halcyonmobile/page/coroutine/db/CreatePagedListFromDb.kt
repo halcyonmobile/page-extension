@@ -35,7 +35,7 @@ inline fun <Key, Value, reified Error : Throwable> createPagedResultFromDao(
         valueLocalCacher = SuspendValueLocalCacherAdapter(coroutineScope, valueLocalStorage),
         keyLocalStorage = SuspendKeyLocalStorageAdapter(coroutineScope, keyLocalStorage),
         initialKey = initialPageKey,
-        provideDataByPageKeyAndSize = SuspendProvideDataByPagedKeyAndSize(coroutineScope, request)
+        provideDataByPageKeyAndSize = SuspendProvideDataByPagedKeyAndSize(coroutineScope) { key, size -> request(key, size) }
     )
     return PagedResult(
         dataSourceFactory = dataSourceFactory,
@@ -71,7 +71,7 @@ inline fun <Key, Value, reified Error : Throwable> createPagedResultFromDao(
         valueLocalCacher = SuspendValueLocalCacherAdapter(coroutineScope, valueLocalStorage),
         keyLocalStorage = keyLocalMapper,
         initialKey = initialPageKey,
-        provideDataByPageKeyAndSize = SuspendProvideDataByPagedKeyAndSize(coroutineScope, request)
+        provideDataByPageKeyAndSize = SuspendProvideDataByPagedKeyAndSize(coroutineScope) { key, size -> request(key, size) }
     )
     return PagedResult(
         dataSourceFactory = dataSourceFactory,
