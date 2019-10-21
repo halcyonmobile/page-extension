@@ -38,7 +38,7 @@ class BarViewModel(private val delegate: PagedListViewModelDelegate<Int, Bar, Ne
 
     fun a() {
         viewModelScope.launch {
-            delegate.setupPagedListByRequest(20, 40) {
+            delegate.setupPagedListByRequest(10, 20) {
                 repository.get(viewModelScope)
             }
         }

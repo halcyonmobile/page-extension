@@ -4,6 +4,7 @@ import androidx.paging.PagedList
 import com.halcyonmobile.page.DataSourceState
 import com.halcyonmobile.page.DataSourceUpdateListener
 import com.halcyonmobile.page.ProvideDataByPageKeyAndSize
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * A [PagedList.BoundaryCallback] which provides state in via [dataSourceUpdateListener]
@@ -21,24 +22,35 @@ class StateProvidingBoundaryCallBack<Key, Value, Error>(
     private val initialKey: Key,
     private val networkPageSize: Int
 ) : PagedList.BoundaryCallback<Value>() {
+
+    private val isLoading = AtomicBoolean(false)
+
     override fun onZeroItemsLoaded() {
+        if (!isLoading.compareAndSet(false, true)) {
+            return
+        }
         dataSourceUpdateListener(DataSourceState.InitialLoading())
         callRequest(initialKey, true, ::onZeroItemsLoaded)
+        isLoading.set(false)
     }
 
     override fun onItemAtEndLoaded(itemAtEnd: Value) {
+        if (!isLoading.compareAndSet(false, true)) {
+            return
+        }
         dataSourceUpdateListener(DataSourceState.LoadingMore())
         keyLocalStorage.getKey(itemAtEnd) {
             when (it) {
                 is KeyOrEndOfList.EndReached -> Unit
-                is KeyOrEndOfList.Key -> callRequest(it.key, false){
+                is KeyOrEndOfList.Key -> callRequest(it.key, false) {
                     onItemAtEndLoaded(itemAtEnd)
                 }
             }
         }
+        isLoading.set(false)
     }
 
-    private inline fun callRequest(key: Key, handleEmptyState: Boolean, crossinline onRetry :() -> Unit) {
+    private inline fun callRequest(key: Key, handleEmptyState: Boolean, crossinline onRetry: () -> Unit) {
         provideDataByPageKeyAndSize(key, networkPageSize) {
             when (it) {
                 is ProvideDataByPageKeyAndSize.Result.Success -> {

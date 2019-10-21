@@ -27,6 +27,13 @@ class PagedListViewModelDelegate<Key, Value, Error> : PagedListViewModel<Value, 
     private val _state = MutableLiveData<DataSourceState<Error>>()
     override val state: LiveData<DataSourceState<Error>> get() = _state
 
+    /**
+     * Sets up the delegate to provide the data coming from the given [request]'s pagedResult.
+     *
+     * Note: setting too big page size with room may result in an undesired behaviour:
+     * When the page size is too big, some values might be dropped from the start of the PagedList, which in return can cause scrolling
+     * If that scrolling happens it might trigger data loading again and so on.
+     */
     suspend fun setupPagedListByRequest(pageSize: Int = DEFAULT_PAGE_SIZE, initialLoadSize: Int = DEFAULT_INITIAL_LOAD_SIZE, request: suspend () -> PagedResult<Key, Value, Error>) {
         val (stateChannel, dataSourceFactory, boundaryCallback) = request()
         _pagedListResult.value = LivePagedListBuilder<Key, Value>(
@@ -46,7 +53,7 @@ class PagedListViewModelDelegate<Key, Value, Error> : PagedListViewModel<Value, 
     }
 
     companion object {
-        private const val DEFAULT_PAGE_SIZE = 10
+        private const val DEFAULT_PAGE_SIZE = 5
         private const val DEFAULT_INITIAL_LOAD_SIZE = 20
     }
 }
