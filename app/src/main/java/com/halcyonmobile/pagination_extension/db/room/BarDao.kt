@@ -1,4 +1,4 @@
-package com.halcyonmobile.pagination_extension
+package com.halcyonmobile.pagination_extension.db.room
 
 import androidx.paging.DataSource
 import androidx.room.Dao
@@ -24,4 +24,6 @@ abstract class BarDao : SuspendPagedDao<Int, Bar, BarEntity> {
     @Insert
     abstract override suspend fun insert(valueEntities: List<BarEntity>)
 
+    @Query("DELETE from barEntity")
+    abstract suspend fun clear()
 }

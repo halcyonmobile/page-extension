@@ -1,4 +1,4 @@
-package com.halcyonmobile.pagination_extension
+package com.halcyonmobile.pagination_extension.db
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -10,6 +10,9 @@ import com.halcyonmobile.core.BarRepository
 import com.halcyonmobile.core.NetworkError
 import com.halcyonmobile.pageui.PagedListViewModel
 import com.halcyonmobile.pageui.coroutine.PagedListViewModelDelegate
+import com.halcyonmobile.pagination_extension.db.room.BarDataBase
+import com.halcyonmobile.pagination_extension.db.sources.BarLocalSourceImpl
+import com.halcyonmobile.pagination_extension.db.sources.BarPageKeyLocalSource
 import kotlinx.coroutines.launch
 
 /**
@@ -30,21 +33,23 @@ class BarViewModel(private val delegate: PagedListViewModelDelegate<Int, Bar, Ne
         val db = Room.databaseBuilder(context, BarDataBase::class.java, "BarDataBase").build()
         BarRepository(
             BarRemoteSource(),
-            BarLocalSource(db.barDao),
+            BarLocalSourceImpl(db.barDao),
             BarPageKeyLocalSource(db.keyDao)
         )
     }
 
 
-    fun a() {
+    fun loadData() {
         viewModelScope.launch {
-            delegate.setupPagedListByRequest(10, 20) {
+            delegate.setupPagedListByRequest(10, 40) {
                 repository.get(viewModelScope)
             }
         }
     }
 
     fun onForceRefresh() {
-//        repository.fetch()
+        viewModelScope.launch {
+            repository.fetch()
+        }
     }
 }

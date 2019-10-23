@@ -16,17 +16,22 @@ import kotlinx.coroutines.CoroutineScope
  */
 class BarRepository(
     private val barRemoteSource: BarRemoteSource,
-    private val barLocalSource: SuspendValueLocalStorage<Int, Bar>,
-    private val keyLocalStorage: SuspendKeyLocalStorage<Int, Bar>
+    private val barLocalSource: BarLocalSource,
+    private val keyLocalStorage: BarKeyLocalStorage
 ) {
 
     fun get(coroutineScope: CoroutineScope): PagedResult<Int, Bar, NetworkError> =
         createPagedResultFromDao(
             coroutineScope = coroutineScope,
-            networkPageSize = 20,
+            networkPageSize = 10,
             keyLocalStorage = keyLocalStorage,
             valueLocalStorage = barLocalSource,
             request = barRemoteSource::get,
             initialPageKey = 0
         )
+
+    suspend fun fetch(){
+        keyLocalStorage.clear()
+        barLocalSource.clear()
+    }
 }

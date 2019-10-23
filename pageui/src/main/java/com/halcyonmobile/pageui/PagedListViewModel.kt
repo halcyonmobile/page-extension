@@ -31,11 +31,11 @@ fun <Value> PagedListViewModel<Value, *>.observeList(
     })
     state.observe(lifecycleOwner, Observer {
         when (it) {
-            is DataSourceState.LoadingMore -> loadingMorePagedListAdapter.onLoadingMore()
-            is DataSourceState.ErrorLoadingMore -> loadingMorePagedListAdapter.onLoadingMoreFailed(it::retry)
-            is DataSourceState.EndReached -> loadingMorePagedListAdapter.onLoadingMoreSucceeded()
-            is DataSourceState.Normal,
+            is DataSourceState.LoadingMore -> loadingMorePagedListAdapter.addLoadingMoreIndicator()
+            is DataSourceState.ErrorLoadingMore -> loadingMorePagedListAdapter.addLoadingMoreFailedIndicator(it::retry)
             is DataSourceState.InitialLoading,
+            is DataSourceState.EndReached -> loadingMorePagedListAdapter.removeLoadingMoreIndicator()
+            is DataSourceState.Normal,
             is DataSourceState.Empty,
             is DataSourceState.ErrorLoadingInitial,
             null -> Unit

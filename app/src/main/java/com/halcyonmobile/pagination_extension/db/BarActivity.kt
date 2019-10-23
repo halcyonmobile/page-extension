@@ -1,25 +1,23 @@
-package com.halcyonmobile.pagination_extension
+package com.halcyonmobile.pagination_extension.db
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.halcyonmobile.pageui.observeInitialLoadingAndShowIndicator
 import com.halcyonmobile.pageui.observeList
 import com.halcyonmobile.pageui.observerLoadingAndUpdateSwipeRefreshLayout
-import com.halcyonmobile.pagination_extension.databinding.ActivityMainBinding
+import com.halcyonmobile.pagination_extension.R
+import com.halcyonmobile.pagination_extension.databinding.ActivityBarBinding
 
 class BarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        val binding = DataBindingUtil.setContentView<ActivityBarBinding>(this, R.layout.activity_bar)
         val viewModel = ViewModelProviders.of(this).get(BarViewModel::class.java)
         viewModel.context = this
-        viewModel.a()
+        viewModel.loadData()
         val adapter = BarAdapter()
         viewModel.observeList(this, adapter)
         viewModel.observerLoadingAndUpdateSwipeRefreshLayout(this, binding.swipeRefreshLayout)

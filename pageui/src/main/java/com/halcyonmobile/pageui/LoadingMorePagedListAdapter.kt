@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Base [PagedListAdapter] which handles loading more and loading more actions as list item.
  *
- * When [onLoadingMore] is called the last item of the RecyclerView will be a loading more view
- * When [onLoadingMoreFailed] is called the last item of the RecyclerView will be a loading more error view with possibility of retry
- * When [onLoadingMoreSucceeded] is called this extra views are removed.
+ * When [addLoadingMoreIndicator] is called the last item of the RecyclerView will be a loading more view
+ * When [addLoadingMoreFailedIndicator] is called the last item of the RecyclerView will be a loading more error view with possibility of retry
+ * When [removeLoadingMoreIndicator] is called this extra views are removed.
  *
  * By default it uses the [LoadingMoreViewHolder] & [LoadingMoreFailedViewHolder] to show the states, however this is customizable via [onCreateLoadingMoreViewHolder],
  * [onCreateLoadingMoreFailedViewHolder], [onBindLoadingMoreViewHolder] and [onBindLoadingMoreFailedViewHolder].
@@ -31,11 +31,11 @@ abstract class LoadingMorePagedListAdapter<Data, VH : RecyclerView.ViewHolder>(d
     open val loadingMoreViewType: Int = LoadingMoreViewHolder.layoutRes
     open val loadingMoreFailedViewType: Int = LoadingMoreFailedViewHolder.layoutRes
 
-    fun onLoadingMore() = changeToState(State.LoadingMore)
+    fun addLoadingMoreIndicator() = changeToState(State.LoadingMore)
 
-    fun onLoadingMoreSucceeded() = changeToState(null)
+    fun removeLoadingMoreIndicator() = changeToState(null)
 
-    fun onLoadingMoreFailed(retry: () -> Unit) = changeToState(State.LoadingMoreFailed(retry))
+    fun addLoadingMoreFailedIndicator(retry: () -> Unit) = changeToState(State.LoadingMoreFailed(retry))
 
     private fun changeToState(stateToChangeTo: State?) {
         if (state == stateToChangeTo) return

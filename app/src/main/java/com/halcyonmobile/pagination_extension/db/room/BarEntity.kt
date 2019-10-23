@@ -1,4 +1,4 @@
-package com.halcyonmobile.pagination_extension
+package com.halcyonmobile.pagination_extension.db.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

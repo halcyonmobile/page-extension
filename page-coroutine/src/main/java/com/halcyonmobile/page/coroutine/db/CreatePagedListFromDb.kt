@@ -25,7 +25,7 @@ inline fun <Key, Value, reified Error : Throwable> createPagedResultFromDao(
     valueLocalStorage: SuspendValueLocalStorage<Key, Value>,
     keyLocalStorage: SuspendKeyLocalStorage<Key, Value>,
     crossinline request: suspend (Key, Int) -> Pair<List<Value>, Key>,
-    networkPageSize: Int = 20,
+    networkPageSize: Int = 10,
     channelBasedDataSourceUpdateListener: ChannelBasedDataSourceUpdateListener<Error> = ChannelBasedDataSourceUpdateListener()
 ): PagedResult<Key, Value, Error> {
     val dataSourceFactory = valueLocalStorage.getValueFactory()

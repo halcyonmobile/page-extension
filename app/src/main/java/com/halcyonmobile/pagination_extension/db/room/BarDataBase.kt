@@ -1,7 +1,8 @@
-package com.halcyonmobile.pagination_extension
+package com.halcyonmobile.pagination_extension.db.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.halcyonmobile.pagination_extension.PageKeyDao
 
 /**
  * Purpose

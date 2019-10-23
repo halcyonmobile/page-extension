@@ -20,6 +20,7 @@ class FooRepository(private val fooRemoteSource: FooRemoteSource) {
     fun get(coroutineScope: CoroutineScope): PagedResult<Int, Int, NetworkError> {
         return createPagedResultFromRequest(
             coroutineScope = coroutineScope,
+            dataSourceInvalidator = invalidator,
             request = { key: Int, pageSize : Int -> fooRemoteSource.get(key, pageSize) },
             initialPageKey = 0
         )
