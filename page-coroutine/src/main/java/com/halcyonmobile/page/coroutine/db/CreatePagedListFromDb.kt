@@ -4,8 +4,8 @@ import com.halcyonmobile.page.coroutine.db.SuspendKeyLocalStorageAdapter
 import com.halcyonmobile.page.coroutine.db.SuspendValueLocalCacherAdapter
 import com.halcyonmobile.page.coroutine.db.localstorage.SuspendKeyLocalStorage
 import com.halcyonmobile.page.coroutine.db.localstorage.SuspendValueLocalStorage
-import com.halcyonmobile.page.db.KeyToValueMapperStorage
 import com.halcyonmobile.page.db.StateProvidingBoundaryCallBack
+import com.halcyonmobile.page.db.ValueToKeyMapper
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -60,7 +60,7 @@ inline fun <Key, Value, reified Error : Throwable> createPagedResultFromDao(
     networkPageSize: Int,
     initialPageKey: Key,
     valueLocalStorage: SuspendValueLocalStorage<Key, Value>,
-    keyLocalMapper: KeyToValueMapperStorage<Key, Value>,
+    keyLocalMapper: ValueToKeyMapper<Key, Value>,
     channelBasedDataSourceUpdateListener: ChannelBasedDataSourceUpdateListener<Error> = ChannelBasedDataSourceUpdateListener(),
     crossinline request: suspend (Key, Int) -> Pair<List<Value>, Key>
 ): PagedResult<Key, Value, Error> {

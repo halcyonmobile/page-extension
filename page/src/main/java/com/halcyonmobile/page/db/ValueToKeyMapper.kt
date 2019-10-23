@@ -3,7 +3,7 @@ package com.halcyonmobile.page.db
 /**
  * An abstract implementation of [KeyLocalStorage] which assumes the page [Key] can be extracted from the last data value.
  */
-abstract class KeyToValueMapperStorage<Key, Value> : KeyLocalStorage<Key, Value> {
+abstract class ValueToKeyMapper<Key, Value> : KeyLocalStorage<Key, Value> {
     private var didReachEnd = false
 
     final override fun cache(key: KeyOrEndOfList<Key>, callback: () -> Unit) {
@@ -25,7 +25,7 @@ abstract class KeyToValueMapperStorage<Key, Value> : KeyLocalStorage<Key, Value>
     abstract fun mapValueToKey(value: Value): Key
 }
 
-inline fun <Key, Value> KeyToValueMapperStorage(crossinline valueToKey: (Value) -> Key): KeyToValueMapperStorage<Key, Value> =
-    object : KeyToValueMapperStorage<Key, Value>() {
+inline fun <Key, Value> ValueToKeyMapper(crossinline valueToKey: (Value) -> Key): ValueToKeyMapper<Key, Value> =
+    object : ValueToKeyMapper<Key, Value>() {
         override fun mapValueToKey(value: Value): Key = valueToKey(value)
     }

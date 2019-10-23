@@ -17,7 +17,7 @@ For the UI a RecyclerView.Adapter is introduced which handles the loading at the
 Also some helper methods are introduced to ease the observation of the delegate.
 Currently only coroutines are supported, but RxJava or callback based implementation can be introduced too if they are requested.
 
-Current latest version 0.1.0.2
+Current latest version 0.1.0.11
 
 ### Add artifactory to your dependencies
 
@@ -382,7 +382,109 @@ class FooRepository(private val fooRemoteSource: FooRemoteSource) {
 ```
 
 To represent the header, a null was added add the start of the list, you may introduce a sealed class or something similar for more complex use-cases.
-As you can see you are responsibil what data is paginated. The library only helps to handle the states and add a general guideline to avoid pitfalls.
+As you can see you are responsible what data is paginated. The library only helps to handle the states and add a general guideline to avoid pitfalls.
+
+
+
+#### I want to use database, what's different?
+
+##### core module
+
+You need to update your repository, it will look something like this:
+```kotlin
+lass BarRepository(
+    private val barRemoteSource: BarRemoteSource,
+    private val barLocalSource: SuspendValueLocalStorage<Int, Bar>,
+    private val keyLocalStorage: SuspendKeyLocalStorage<Int, Bar>
+) {
+
+    fun get(coroutineScope: CoroutineScope): PagedResult<Int, Bar, NetworkError> =
+        createPagedResultFromDao(
+            coroutineScope = coroutineScope,
+            networkPageSize = 10,
+            keyLocalStorage = keyLocalStorage,
+            valueLocalStorage = barLocalSource,
+            request = barRemoteSource::get,
+            initialPageKey = 0
+        )
+
+}
+```
+The barLocalSource and keyLocalStorage implementation will be coming from the app module.
+
+You can also use ValueToKeyMapper instead of keyLocalStorage if the key can be extracted from the last value of the list.
+
+##### app module, ui
+
+The ui stays the same, you don't need to change anything there.
+What you need to do in the app is provide a LocalSource and a PageKeyLocalSource
+
+LocalSource will look something like this:
+```kotlin
+class BarLocalSourceImpl(private val barDao: BarDao) : PagedSuspendLocalStorage<Int, Bar, BarEntity>(barDao) {
+
+    override fun valueEntityToValue(valueEntity: BarEntity): Bar = Bar(id = valueEntity.id, title = valueEntity.something)
+
+    override fun valueToValueEntry(value: Bar): BarEntity = BarEntity(id = value.id, something = value.title)
+}
+```
+
+Where BarDao looks like this:
+```kotlin
+@Dao
+abstract class BarDao : SuspendPagedDao<Int, Bar, BarEntity> {
+
+    @Query("SELECT * from barEntity ORDER BY id")
+    abstract override fun getValueEntitiesFactory(): DataSource.Factory<Int, BarEntity>
+
+    @Insert
+    abstract override suspend fun insert(valueEntities: List<BarEntity>)
+
+}
+```
+
+For the PageKeyLocalSource you have two option:
+- the page-key can be extracted from the last value
+- the page has to be saved in the database
+
+When the key can be extracted, you should implement ValueToKeyMapper, something like this:
+```kotlin
+class BarToPageKeyMapper: ValueToKeyMapper<String, Bar>() {
+    override fun mapValueToKey(value: Bar): String = value.nextPageKey
+}
+```
+
+When the key has to be saved to the database you should implement SuspendKeyLocalStorage, will look something like this:
+```kotlin
+class BarPageKeyLocalSource(private val pagedKeyDao: PageKeyDao) : PagedSuspendKeyLocalStorage<Int, Bar, String, KeyEntity>(
+    BAR_PAGE_KEY_ID, pagedKeyDao), BarKeyLocalStorage {
+
+    override fun endToKeyEntity(): KeyEntity =
+        KeyEntity(keyEntityId, 0, true)
+
+    override fun keyToKeyEntity(key: Int): KeyEntity =
+        KeyEntity(keyEntityId, key.toLong(), false)
+
+    override fun keyEntityToKey(keyEntity: KeyEntity): KeyOrEndOfList<Int> =
+        if (keyEntity.isEnd) KeyOrEndOfList.EndReached() else KeyOrEndOfList.Key(keyEntity.value.toInt())
+
+    companion object {
+        private const val BAR_PAGE_KEY_ID = "BAR"
+    }
+}
+```
+
+Where the pagedKeyDao looks like this:
+```kotlin
+@Dao
+abstract class PageKeyDao : SuspendKeyDao<String, KeyEntity> {
+    @Query("SELECT * FROM keyentity WHERE id = :id")
+    abstract override suspend fun get(id: String): KeyEntity
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract override suspend fun insert(keyEntity: KeyEntity)
+}
+```
 
 ## Structure and contributions
 
