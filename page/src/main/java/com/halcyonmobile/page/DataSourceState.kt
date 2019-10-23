@@ -15,6 +15,7 @@ sealed class DataSourceState<Error> {
     class Empty<Error> : DataSourceState<Error>()
     class InitialLoading<Error> : DataSourceState<Error>()
     class LoadingMore<Error> : DataSourceState<Error>()
+    class EndReached<Error> : DataSourceState<Error>()
     abstract class ErrorLoadingMore<Error>(val error: Error) : DataSourceState<Error>() {
         abstract fun retry()
     }

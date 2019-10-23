@@ -62,7 +62,7 @@ class StateProvidingListDataSource<Data, PageKey, Error>(
                 is ProvideDataByPageKeyAndSize.Result.Success<Data, PageKey, Error> -> {
                     val resultDataList = result.data
                     callback.onResult(resultDataList, result.nextKey)
-                    dataSourceUpdateListener(DataSourceState.Normal())
+                    dataSourceUpdateListener(if (resultDataList.isEmpty()) DataSourceState.EndReached() else DataSourceState.Normal())
                 }
                 is ProvideDataByPageKeyAndSize.Result.Error<Data, PageKey, Error> -> {
                     dataSourceUpdateListener(DataSourceState.ErrorLoadingMore(result.error) {

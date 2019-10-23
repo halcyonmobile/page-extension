@@ -50,14 +50,19 @@ class StateProvidingBoundaryCallBack<Key, Value, Error>(
         isLoading.set(false)
     }
 
-    private inline fun callRequest(key: Key, handleEmptyState: Boolean, crossinline onRetry: () -> Unit) {
+    private inline fun callRequest(key: Key, isInitial: Boolean, crossinline onRetry: () -> Unit) {
         provideDataByPageKeyAndSize(key, networkPageSize) {
             when (it) {
                 is ProvideDataByPageKeyAndSize.Result.Success -> {
                     val nextKey = if (it.data.isEmpty()) KeyOrEndOfList.EndReached<Key>() else KeyOrEndOfList.Key(it.nextKey)
                     keyLocalStorage.cache(nextKey) {
                         valueLocalCacher.cache(it.data) {
-                            dataSourceUpdateListener(if (handleEmptyState && it.data.isEmpty()) DataSourceState.Empty() else DataSourceState.Normal())
+                            val stateToPublish : DataSourceState<Error> = when{
+                                it.data.isNotEmpty() -> DataSourceState.Normal()
+                                isInitial -> DataSourceState.Empty()
+                                else -> DataSourceState.EndReached()
+                            }
+                            dataSourceUpdateListener(stateToPublish)
                         }
                     }
                 }

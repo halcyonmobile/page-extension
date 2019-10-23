@@ -26,16 +26,15 @@ fun <Value> PagedListViewModel<Value, *>.observeList(
     lifecycleOwner: LifecycleOwner,
     loadingMorePagedListAdapter: LoadingMorePagedListAdapter<Value, *>
 ) {
-    pagedListResult.observe(lifecycleOwner, Observer {
+    pagedListResult.observe(lifecycleOwner, Observer<PagedList<Value>> {
         loadingMorePagedListAdapter.submitList(it)
     })
     state.observe(lifecycleOwner, Observer {
         when (it) {
-            is DataSourceState.Normal -> loadingMorePagedListAdapter.onLoadingMoreSucceeded()
             is DataSourceState.LoadingMore -> loadingMorePagedListAdapter.onLoadingMore()
-            is DataSourceState.ErrorLoadingMore -> loadingMorePagedListAdapter.onLoadingMoreFailed(
-                it::retry
-            )
+            is DataSourceState.ErrorLoadingMore -> loadingMorePagedListAdapter.onLoadingMoreFailed(it::retry)
+            is DataSourceState.EndReached -> loadingMorePagedListAdapter.onLoadingMoreSucceeded()
+            is DataSourceState.Normal,
             is DataSourceState.InitialLoading,
             is DataSourceState.Empty,
             is DataSourceState.ErrorLoadingInitial,
