@@ -1,0 +1,2 @@
+include ':app', ':page', ':page-coroutine', ':core', ':pageui', ':pageui-coroutine', ':page-common', ':page-coroutine-common'
+rootProject.name='pagination-extension'

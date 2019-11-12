@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/in_memory_example_button"
+            android:layout_width="wrap_content"
+            android:text="In-Memory-Example"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/in_db_example_button"
+            android:layout_width="wrap_content"
+            android:text="DB-Example"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/in_memory_item_count_example_button"
+            android:layout_width="wrap_content"
+            android:text="In-Memory-Item-Count-Example"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/in_db_item_count_example_button"
+            android:layout_width="wrap_content"
+            android:text="DB-Item-Count-Example"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</layout>
