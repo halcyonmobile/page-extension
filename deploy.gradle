@@ -7,4 +7,4 @@
 
 ext.libraryGroupId = 'page-extension'
 ext.libraryVersion = '0.1.0.16'
-ext.bintray_source_url = "https://github.com/halcyonmobiledev/page-extension"
+ext.bintray_source_url = "https://github.com/halcyonmobile/page-extension"
