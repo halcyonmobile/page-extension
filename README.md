@@ -19,7 +19,7 @@ For the UI a RecyclerView.Adapter is introduced which handles the loading at the
 Also some helper methods are introduced to ease the observation of the delegate.
 Currently only coroutines are supported, but RxJava or callback based implementation can be introduced too if they are requested.
 
-Current latest version 0.1.0.16
+Current latest version 1.0.0
 
 - Add jcenter to your dependencies
 
