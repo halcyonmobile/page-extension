@@ -37,7 +37,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
-    api "androidx.lifecycle:lifecycle-livedata:2.1.0"
+    api "androidx.lifecycle:lifecycle-livedata:2.3.1"
     api "androidx.appcompat:appcompat:1.1.0"
 
     api project(':page-common')
