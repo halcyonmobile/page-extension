@@ -19,9 +19,29 @@ For the UI a RecyclerView.Adapter is introduced which handles the loading at the
 Also some helper methods are introduced to ease the observation of the delegate.
 Currently only coroutines are supported, but RxJava or callback based implementation can be introduced too if they are requested.
 
-Current latest version 1.0.0
+*Latest version:* ![Latest release](https://img.shields.io/github/v/release/halcyonmobile/page-extension)
 
-- Add jcenter to your dependencies
+## Ensure you have the HalcyonMobile GitHub Packages as a repository
+
+```gradle
+// top level build.gradle
+{
+allprojects {
+    repositories {
+        // ...
+        maven {
+            url "https://maven.pkg.github.com/halcyonmobile/android-common-extensions"
+            credentials {
+                username = System.getenv("GITHUB_USERNAME")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
+```
+
+Note: you only need one maven declaration with "halcyonmobile/{specific}", every other package will be accessable.
+
 
 ### Setup with coroutines
 
