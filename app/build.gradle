@@ -41,7 +41,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "android.arch.lifecycle:viewmodel:1.1.1"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
