@@ -25,7 +25,7 @@ Currently only coroutines are supported, but RxJava or callback based implementa
 
 ```gradle
 // top level build.gradle
-{
+//..
 allprojects {
     repositories {
         // ...
