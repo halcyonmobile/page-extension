@@ -40,7 +40,7 @@ allprojects {
     }
 }
 // OR
-// top level build.gradle
+// top level build.gradle.kts
 //..
 allprojects {
     repositories {
